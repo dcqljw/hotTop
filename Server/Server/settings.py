@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'Server.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# connect(host="mongodb://127.0.0.1:27017/hotTop")
+connect(host="mongodb://127.0.0.1:27017/hotTop")
 
 # DATABASES = {
 #     'default': {
