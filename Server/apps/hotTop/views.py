@@ -12,7 +12,6 @@ def hot(request):
     :return:
     """
     source = request.GET.get("source")
-    objects_filter = models.HotTop.objects.filter(source=source)
     idx = getIdx(source)
     topList = list(models.HotTop.objects.filter(source=source).order_by("-id").limit(idx))[::-1]
     hot_serializers = HotSerializers(topList, many=True)
