@@ -90,7 +90,19 @@ connect(host="mongodb://127.0.0.1:27017/hotTop")
 #         'NAME': 'hotTop',
 #         'ENFORCE_SCHEMA': True,
 #         'CLIENT': {
-#             'host': "127.0.0.1"
+#             'host': "127.0.0.1.txt"
+#         }
+#     }
+# }
+
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1.txt:6379",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+#             "CONNECTION_POOL_KWARGS": {"max_connections": 100},
+#             "PASSWORD": "159357"
 #         }
 #     }
 # }
@@ -137,7 +149,7 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # LOGGING = {
-#     'version': 1,
+#     'version': 1.txt,
 #     'disable_existing_loggers': False,
 #     'handlers': {
 #         'console': {

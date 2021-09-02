@@ -10,3 +10,10 @@ class HotTop(mongoengine.Document):
     source = mongoengine.StringField()
 
     meta = {'collection': "HotTop"}
+
+
+class HotTopDate(mongoengine.Document):
+    date = mongoengine.StringField()
+    source = mongoengine.StringField()
+
+    meta = {"collection": "HotTopDate"}
