@@ -26,7 +26,8 @@ def verify(t, sign) -> bool:
 
 if __name__ == '__main__':
     t = time.time()
+    print(t)
     md5 = hashlib.md5()
-    md5.update(bytes(str(t).encode("utf-8")))
+    md5.update(bytes(str(1630925214).encode("utf-8")))
     time.sleep(2)
-    print(verify(t, md5.hexdigest()))
+    print(verify(1630925214, md5.hexdigest()))

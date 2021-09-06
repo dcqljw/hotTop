@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from mongoengine import connect
 
@@ -52,7 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'Server.middleware.HeadersMD'
+    # 'Server.middleware.HeadersMD'
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -99,12 +98,17 @@ connect(host="mongodb://127.0.0.1:27017/hotTop")
 # CACHES = {
 #     "default": {
 #         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": "redis://127.0.0.1.txt:6379",
+#         "LOCATION": "redis://127.0.0.1:6379",
 #         "OPTIONS": {
 #             "CLIENT_CLASS": "django_redis.client.DefaultClient",
 #             "CONNECTION_POOL_KWARGS": {"max_connections": 100},
-#             "PASSWORD": "159357"
 #         }
+#     }
+# }
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#         'LOCATION': 'unique-snowflake'
 #     }
 # }
 
@@ -129,9 +133,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-cn'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/ShangHai'
 
 USE_I18N = True
 
