@@ -24,6 +24,7 @@
 
 <script>
 import axios from "axios";
+import md5 from "js-md5"
 
 export default {
   name: "test",
@@ -34,36 +35,38 @@ export default {
         "zhihu": "https://static.zhihu.com/heifetz/favicon.ico",
         "baidu": "https://www.baidu.com/favicon.ico",
         "bilibili": "https://static.hdslb.com/images/favicon.ico",
-        "weibo": "https://weibo.com/favicon.ico"
+        "weibo": "https://weibo.com/favicon.ico",
+        "biliTop": "https://static.hdslb.com/images/favicon.ico"
       },
       hot: ["baidu", "zhihu", "bilibili", "weibo"],
       hot_china: {
         "baidu": "百度",
         "zhihu": "知乎",
         "bilibili": "B站",
-        "weibo": "微博"
+        "weibo": "微博",
+        "biliTop": "B站日榜"
       }
     }
   },
   methods: {},
   created() {
-    axios.defaults.baseURL = "http://127.0.0.1:8000/api/hot"
-    axios.defaults.method = "get"
-
-    for (let i = 0; i < this.hot.length; i++) {
-      axios({
-        params: {
-          source: this.hot[i]
-        }
-      }).then(res => {
-        let data = {"idx": i, "name": res.data['title'], "data": res.data["data"]}
-        this.data.push(data)
-        this.data.sort((a, b) => {
-          return a.idx - b.idx
-        })
-      })
-    }
-    console.log(this.data.length)
+    axios.defaults.baseURL = "http://127.0.0.1:8000/api/get_all_hot"
+    axios.defaults.method = "post"
+    let _t = Date.parse(new Date())
+    let time = _t.toString().substring(0, _t.toString().length - 3)
+    console.log(md5(time))
+    axios({
+      data: {
+        t: time,
+        sign: md5(time)
+      }
+    }).then(res => {
+      if (res.status !== 200) {
+        this.$message.error("请求失败")
+      } else {
+        this.data = res.data.data
+      }
+    })
   },
 }
 </script>
@@ -145,7 +148,8 @@ export default {
 
 
 .no {
-  width: 22px;
+  width: fit-content;
+  padding: 1px 6px;
   height: 22px;
   text-align: center;
   border-radius: 5px;
