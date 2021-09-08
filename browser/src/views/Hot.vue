@@ -1,11 +1,11 @@
 <template>
   <div class="hot">
-    <el-card class="box-card hot-card" shadow="always">
+    <el-card v-for="result in data" :key="result" class="box-card hot-card" shadow="always">
       <template #header>
-        <img src="https://www.baidu.com/favicon.ico" style="height: 26px">
-        <span class="hot-card-title">百度热搜</span>
+        <img :src="logoUrl[result['name']]" style="height: 26px">
+        <span class="hot-card-title">{{ hot_china[result["name"]] }}</span>
       </template>
-      <div v-for="item in baidu" :key="item.idx" class="hot-item">
+      <div v-for="item in result['data']" :key="item" class="hot-item">
         <div class="top-item">
           <span v-if="item.idx === 1" class="no1 no">
             {{ item.idx }}</span>
@@ -16,63 +16,6 @@
           <span v-else class="no">
             {{ item.idx }}</span>
           <el-link :href="item.url" target="_blank" :underline="false">{{ item.title }}</el-link>
-        </div>
-      </div>
-    </el-card>
-    <el-card class="box-card hot-card" shadow="always">
-      <template #header>
-        <img src="https://static.zhihu.com/heifetz/favicon.ico" style="height: 26px">
-        <span class="hot-card-title">知乎热搜</span>
-      </template>
-      <div v-for="item in zhihu" :key="item.idx" class="hot-item">
-        <div class="top-item">
-          <span v-if="item.idx === 1" class="no1 no">
-            {{ item.idx }}</span>
-          <span v-else-if="item.idx ===2" class="no2 no">
-            {{ item.idx }}</span>
-          <span v-else-if="item.idx === 3" class="no3 no">
-            {{ item.idx }}</span>
-          <span v-else class="no">
-            {{ item.idx }}</span>
-          <el-link :href="item.url" target="_blank" :underline="false">{{ item.title }}</el-link>
-        </div>
-      </div>
-    </el-card>
-    <el-card class="box-card hot-card" shadow="always">
-      <template #header>
-        <img src="https://static.hdslb.com/images/favicon.ico" style="height: 26px">
-        <span class="hot-card-title">哔哩哔哩热搜</span>
-      </template>
-      <div v-for="item in bilibili" :key="item.idx" class="hot-item">
-        <div class="top-item">
-          <span v-if="item.idx === 1" class="no1 no">
-            {{ item.idx }}</span>
-          <span v-else-if="item.idx === 2" class="no2 no">
-            {{ item.idx }}</span>
-          <span v-else-if="item.idx === 3" class="no3 no">
-            {{ item.idx }}</span>
-          <span v-else class="no">
-            {{ item.idx }}</span>
-          <el-link :underline="false" target="_blank" :href="item.url">{{ item.title }}</el-link>
-        </div>
-      </div>
-    </el-card>
-    <el-card class="box-card hot-card" shadow="always">
-      <template #header>
-        <img src="https://weibo.com/favicon.ico" style="height: 26px">
-        <span class="hot-card-title">微博热搜</span>
-      </template>
-      <div v-for="item in biliTop" :key="item.idx" class="hot-item">
-        <div class="top-item">
-          <span v-if="item.idx === 1" class="no1 no">
-            {{ item.idx }}</span>
-          <span v-else-if="item.idx === 2" class="no2 no">
-            {{ item.idx }}</span>
-          <span v-else-if="item.idx === 3" class="no3 no">
-            {{ item.idx }}</span>
-          <span v-else class="no">
-            {{ item.idx }}</span>
-          <el-link :underline="false" target="_blank" :href="item.url">{{ item.title }}</el-link>
         </div>
       </div>
     </el-card>
@@ -81,85 +24,68 @@
 
 <script>
 import axios from "axios";
+import md5 from "js-md5"
 
 export default {
   name: "Hot",
   data() {
     return {
-      baidu: [],
-      zhihu: [],
-      bilibili: [],
-      weibo: [],
-      biliTop: [],
-      loading: true,
-      dialogVisible: false,
-      url: "",
+      data: [],
+      logoUrl: {
+        "zhihu": "https://static.zhihu.com/heifetz/favicon.ico",
+        "baidu": "https://www.baidu.com/favicon.ico",
+        "bilibili": "https://static.hdslb.com/images/favicon.ico",
+        "weibo": "https://weibo.com/favicon.ico",
+        "biliTop": "https://static.hdslb.com/images/favicon.ico"
+      },
+      hot: ["baidu", "zhihu", "bilibili", "weibo"],
+      hot_china: {
+        "baidu": "百度",
+        "zhihu": "知乎",
+        "bilibili": "B站",
+        "weibo": "微博",
+        "biliTop": "B站日榜"
+      }
     }
   },
+  methods: {},
   created() {
-    axios.defaults.baseURL = "http://127.0.0.1:8000/api/hot"
-    axios.defaults.method = "get"
+    axios.defaults.baseURL = "http://127.0.0.1:8000/api/get_all_hot"
+    axios.defaults.method = "post"
+    let _t = Date.parse(new Date())
+    let time = _t.toString().substring(0, _t.toString().length - 3)
+    console.log(md5(time))
     axios({
-      params: {
-        source: "baidu"
+      data: {
+        t: time,
+        sign: md5(time)
       }
     }).then(res => {
-      console.log(res)
-      this.baidu = res.data.data
-      this.loading = false
-    })
-    axios({
-      params: {
-        source: "zhihu"
+      if (res.status !== 200) {
+        this.$message.error("请求失败")
+      } else {
+        this.data = res.data.data
       }
-    }).then(res => {
-      this.zhihu = res.data.data
     })
-    axios({
-      params: {
-        source: "bilibili"
-      }
-    }).then(res => {
-      this.bilibili = res.data.data
-    })
-    axios({
-      params: {
-        source: "weibo"
-      }
-    }).then(res => {
-      this.weibo = res.data.data
-    })
-    axios({
-      params: {
-        source: "biliTop"
-      }
-    }).then(res => {
-      this.biliTop = res.data.data
-    })
-    document.title = "hot"
-    console.log(this.zhihu)
   },
-  methods: {
-    toHref(url) {
-      this.url = url
-      this.dialogVisible = true
-    }
-  }
 }
 </script>
 
 <style scoped>
 .hot {
-  position: fixed;
-  top: 50px;
-  height: 350px;
-  width: 100%;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  justify-content: center;
   display: flex;
-  justify-content: space-evenly;
+}
+
+.hot > div {
+  margin: 10px 20px;
 }
 
 .hot-card {
   width: 400px;
+  height: 350px;
 }
 
 .top-item {
@@ -170,11 +96,13 @@ export default {
   margin: 10px 0;
 }
 
-.hot-card /deep/ .el-card__header {
+
+.hot-card :deep(.el-card__header) {
+  display: flex;
   padding: 10px;
 }
 
-.hot-card /deep/ .el-card__header div {
+.hot-card :deep(.el-card__header div) {
   display: flex;
   position: relative;
 }
@@ -191,39 +119,41 @@ export default {
   width: auto !important;
 }
 
-.hot-card /deep/ .el-link {
+.hot-card :deep(.el-link) {
   display: block;
   width: 340px;
 }
 
-.hot-card /deep/ .el-card__body {
+.hot-card :deep(.el-card__body ) {
   padding: 0 10px;
 }
 
-.hot-card /deep/ .el-card__body {
+.hot-card :deep(.el-card__body) {
   overflow-y: scroll;
   height: 290px;
 }
 
-.hot-card /deep/ .el-card__body::-webkit-scrollbar {
+.hot-card :deep(.el-card__body::-webkit-scrollbar) {
   width: 5px;
 }
 
 /* 滚动槽 */
-.hot-card /deep/ .el-card__body::-webkit-scrollbar-track {
+.hot-card :deep(.el-card__body::-webkit-scrollbar-track) {
   border-radius: 10px;
 }
 
 /* 滚动条滑块 */
-.hot-card /deep/ .el-card__body::-webkit-scrollbar-thumb {
+.hot-card :deep(.el-card__body::-webkit-scrollbar-thumb) {
   border-radius: 10px;
   background: rgba(130, 130, 130, .5);
 }
 
 
 .no {
-  width: 22px;
-  height: 22px;
+  width: fit-content;
+  font-size: 10px;
+  padding: 1px 6px;
+  height: 18px;
   text-align: center;
   border-radius: 5px;
   margin-right: 5px;
@@ -245,7 +175,7 @@ export default {
   color: white;
 }
 
-.hot /deep/ .el-dialog {
+.hot :deep(.el-dialog) {
   margin-top: 0 !important;
   width: 50%;
   position: fixed;
@@ -254,16 +184,16 @@ export default {
   top: 10px;
 }
 
-.hot /deep/ .el-dialog__body {
+.hot :deep(.el-dialog__body) {
   height: 100%;
   padding: 0;
 }
 
-.hot /deep/ .el-dialog__header {
+.hot :deep(.el-dialog__header) {
   padding: 0;
 }
 
-.hot /deep/ .el-dialog__headerbtn {
+.hot :deep(.el-dialog__headerbtn) {
   height: 50px;
   width: 50px;
   right: -100px;
