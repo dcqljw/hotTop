@@ -1,21 +1,26 @@
 <template>
   <div class="hot">
     <el-card v-for="result in data" :key="result" class="box-card hot-card" shadow="always">
+      <!--            <div class="top">-->
+      <!--              <img :src="topImg">-->
+      <!--            </div>-->
       <template #header>
         <img :src="logoUrl[result['name']]" style="height: 26px">
-        <span class="hot-card-title">{{ hot_china[result["name"]] }}</span>
+        <span class="hot-card-title">{{ hot_CN[result["name"]] }}</span>
       </template>
-      <div v-for="item in result['data']" :key="item" class="hot-item">
-        <div class="top-item">
+      <div>
+        <div v-for="item in result['data']" :key="item" class="hot-item">
+          <div class="top-item">
           <span v-if="item.idx === 1" class="no1 no">
             {{ item.idx }}</span>
-          <span v-else-if="item.idx === 2" class="no2 no">
+            <span v-else-if="item.idx === 2" class="no2 no">
             {{ item.idx }}</span>
-          <span v-else-if="item.idx === 3" class="no3 no">
+            <span v-else-if="item.idx === 3" class="no3 no">
             {{ item.idx }}</span>
-          <span v-else class="no">
+            <span v-else class="no">
             {{ item.idx }}</span>
-          <el-link :href="item.url" target="_blank" :underline="false">{{ item.title }}</el-link>
+            <el-link :href="item.url" target="_blank" :underline="false">{{ item.title }}</el-link>
+          </div>
         </div>
       </div>
     </el-card>
@@ -39,13 +44,14 @@ export default {
         "biliTop": "https://static.hdslb.com/images/favicon.ico"
       },
       hot: ["baidu", "zhihu", "bilibili", "weibo"],
-      hot_china: {
+      hot_CN: {
         "baidu": "百度",
         "zhihu": "知乎",
         "bilibili": "B站",
         "weibo": "微博",
         "biliTop": "B站日榜"
-      }
+      },
+      topImg: "http://127.0.0.1:8000/static/top.png"
     }
   },
   methods: {},
@@ -96,6 +102,9 @@ export default {
   margin: 10px 0;
 }
 
+.hot-card {
+  position: relative;
+}
 
 .hot-card :deep(.el-card__header) {
   display: flex;
@@ -202,4 +211,15 @@ export default {
   background-color: #000;
   opacity: .6;
 }
+
+/*.top {*/
+/*  position: absolute;*/
+/*  right: 22px;*/
+/*  bottom: 22px;*/
+/*  border: 1px solid #c2baba;*/
+/*}*/
+
+/*.top > img {*/
+/*  height: 30px;*/
+/*}*/
 </style>
