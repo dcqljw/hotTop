@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-%flkilrqbezhq^ey@$iyy7o(#8j7*7-5ptw2o72_p78i$k91vo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "apps.hotTop",
+    "apps.UserAuth",
     'mongoengine',
     'rest_framework',
     'rest_framework_mongoengine',
@@ -84,16 +86,16 @@ WSGI_APPLICATION = 'Server.wsgi.application'
 
 connect(host="mongodb://127.0.0.1:27017/hotTop")
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.',
-#         'NAME': 'hotTop',
-#         'ENFORCE_SCHEMA': True,
-#         'CLIENT': {
-#             'host': "127.0.0.1.txt"
-#         }
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'hottop',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
+        'USER': 'root',
+        'PASSWORD': '159357'
+    }
+}
 
 # CACHES = {
 #     "default": {
@@ -117,23 +119,23 @@ connect(host="mongodb://127.0.0.1:27017/hotTop")
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.UserAuth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.UserAuth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.UserAuth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.UserAuth.password_validation.NumericPasswordValidator',
     },
 ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'zh-cn'
+LANGUAGE_CODE = 'zh-hans'
 
 TIME_ZONE = 'Asia/ShangHai'
 
@@ -145,8 +147,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+import os
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

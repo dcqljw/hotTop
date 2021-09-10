@@ -58,7 +58,6 @@ def get_all_hot(request):
         if verify(t=t, sign=sign):
             data = []
             count = 0
-            # for i in models.HotTop.objects.aggregate([{"$group": {"_id": '$source'}}]):
             for source in ["zhihu", "bilibili", "biliTop", "weibo", "baidu"]:
                 idx = models.HotTop.objects.filter(source=source).order_by("-id").first().idx
                 topList = list(models.HotTop.objects.filter(source=source).order_by("-id").limit(idx))[::-1]
@@ -74,3 +73,4 @@ def get_all_hot(request):
     else:
         context["msg"] = "error"
         return JsonResponse(context, safe=False, status=201)
+
