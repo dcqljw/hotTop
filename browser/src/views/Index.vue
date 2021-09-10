@@ -22,15 +22,18 @@
     </div>
   </div>
   <div class="fixed input">
-    <input ref="searchval" @keyup="search" @blur="noneSearchData" @click="showSearchData">
+    <input ref="searchval" @keyup="search" @blur="noneSearchData" @click="showSearchData" v-model="q"
+           @keyup.down="selectData" @keyup.up="selectData">
     <div class="sites">
       <el-radio v-model="site" label="百度" @click="showSearchData">百度</el-radio>
       <el-radio v-model="site" label="谷歌" @click="showSearchData">谷歌</el-radio>
       <el-radio v-model="site" label="必应" @click="showSearchData">必应</el-radio>
     </div>
-    <div v-if="searchI" class="searchL">
-      <div v-for="item in searchData" :key="item">
-        <div>{{ item }}</div>
+    <div v-if="searchData.length > 0 && searchI" class="searchL" @click="showSearchData">
+      <div v-for="(item,index) in searchData" :key="index" @mouseenter="setClass"
+           :class="{active:(index === isActive)}">
+        {{ index === isActive }}
+        {{ item }}
       </div>
     </div>
   </div>
@@ -50,8 +53,12 @@ export default {
       },
       tc: false,
       site: "百度",
-      searchI: false,
-      searchData: []
+      searchI: true, //显示
+      searchData: [],
+      data: [],
+      q: "",
+      idx: 0,
+      isActive: false
     }
   },
   created() {
@@ -63,30 +70,58 @@ export default {
     },
     search() {
       let text = this.$refs.searchval.value
-      console.log(text)
       if (text !== "") {
-        console.log(text)
-        let data = [1, 2, 3, 4, 5, 6, 7]
-        this.searchData = data
+        this.searchData = [1, 2, 3, 4, 5, 6, 7]
+        this.searchI = true
       } else {
-        document.getElementsByClassName("searchL")[0].style.display = "none"
+        this.searchData = []
       }
       this.searchI = true
     },
     noneSearchData() {
-      this.searchI = false
+      //鼠标失去焦点
+      // this.searchI = false
     },
     showSearchData() {
+      //鼠标点击
       let text = this.$refs.searchval.value
       if (text !== "") {
         this.searchI = true
       }
+    },
+    selectData(e) {
+      if (this.searchData.length !== 0) {
+        if (e.keyCode === 40) {
+          console.log(this.idx)
+          this.q = this.searchData[this.idx];
+          this.idx += 1
+          if (this.idx >= this.searchData.length) {
+            this.idx = 0
+          }
+        } else if (e.keyCode === 38) {
+          console.log(this.idx)
+          if (this.idx === 0) {
+            this.idx = this.searchData.length
+          }
+          this.q = this.searchData[this.idx];
+          this.idx -= 1
+        }
+      }
+    },
+    setClass(index) {
+      console.log(index)
+      this.isActive = index
+      console.log(this.isActive)
     }
   },
 }
 </script>
 
 <style scoped>
+.active {
+  color: red;
+}
+
 .background {
   height: 100%;
   object-fit: cover;
